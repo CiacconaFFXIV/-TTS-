@@ -10,6 +10,7 @@ namespace 渔人的直感.Models
     public static class Data
     {
         public const int FishEyesBuffId = 762; // 50; //      鱼眼的Buff ID
+        public const int FishIntuitionBuffId = 568; // Fisher's Intuition / 鱼识
 
         public static List<SpecialWeather> SpecialWeathers = new List<SpecialWeather>();
 
@@ -66,7 +67,23 @@ namespace 渔人的直感.Models
 
         public static bool IsInOceanFishing => GetInstanceContentDirector() != IntPtr.Zero;
 
-        public static int UiStatusEffects; //UIStatusEffects相对于ActorTable的偏移。此值随着版本更新随时可能发生改变。
+        /// <summary>
+        /// 本地玩家 Character 上嵌入的 StatusManager 偏移（特征码 lea rax,[rcx+disp]; ret）。
+        /// Status 数组在 StatusManager+0x8，每槽 0x10 字节，共 60 槽。
+        /// </summary>
+        public static int UiStatusEffects;
+
+        public const int StatusArrayOffset = 0x8;
+        public const int StatusSlotStride = 0x10;
+        public const int StatusSlotCount = 60;
+
+        public static IntPtr GetPlayerStatusArrayPtr(IntPtr localPlayer)
+        {
+            if (localPlayer == IntPtr.Zero)
+                return IntPtr.Zero;
+
+            return localPlayer + UiStatusEffects + StatusArrayOffset;
+        }
 
         public static void Initialize(SigScanner scanner)
         {
@@ -109,6 +126,7 @@ namespace 渔人的直感.Models
             var uiStatusEffectstAddress = scanner.ScanText("48 8D 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 8B 41");
 
             UiStatusEffects = scanner.ReadInt32(uiStatusEffectstAddress, 3);
+            Debug.WriteLine($"StatusManager offset: 0x{UiStatusEffects:X}");
 
             SpecialWeathers.Add(new SpecialWeather { Id = 145, Name = "幻海流", Duration = 120f });
             if (Properties.Settings.Default.CheckDiademWeather)
@@ -122,43 +140,22 @@ namespace 渔人的直感.Models
             // SpecialWeathers.Add(new SpecialWeather { Id = 2, Name = "晴朗（测试）", Duration = 60f });
         }
 
-        //基本上是rebuild了这个函数 E8 ?? ?? ?? ?? 0F B6 98
         private static IntPtr GetInstanceContentDirector()
         {
-            //找不到EventFrameworkPtr
             var eventFramework = eventFrameworkPtr;
-
             if (eventFramework == IntPtr.Zero)
-            {
-                Debug.WriteLine("Invalid eventFrameworkPtr");
-
                 return IntPtr.Zero;
-            }
 
             var directorPtr = _scanner.ReadIntPtr(eventFramework + contentDirectorOffset);
-
-            //找不到ContentDirector
             if (directorPtr == IntPtr.Zero)
-            {
-                Debug.WriteLine("Invalid directorPtr");
                 return IntPtr.Zero;
-            }
 
-            //检查Director类型是否为InstanceContent
             var directorType = _scanner.ReadUInt16(_scanner.ReadIntPtr(directorPtr + eventInfoOffset), 2);
-
             if (directorType != 0x8003)
-            {
-                Debug.WriteLine("Invalid director type");
                 return IntPtr.Zero;
-            }
 
-            //检查InstanceContent的类型是否为OceanFishing
             if (_scanner.ReadByte(directorPtr, contentDirectorTypeOffset) != 16)
-            {
-                Debug.WriteLine("Invalid InstanceContent type");
                 return IntPtr.Zero;
-            }
 
             return directorPtr;
         }

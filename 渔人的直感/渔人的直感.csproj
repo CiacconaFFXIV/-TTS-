@@ -54,22 +54,16 @@
     <ApplicationIcon>Fisher.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
-    </Reference>
-    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Speech" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
@@ -109,6 +103,19 @@
     <Compile Include="Models\Fish.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="Models\Common.cs" />
+    <Compile Include="Models\ChatLogData.cs" />
+    <Compile Include="Models\ChatLogEntry.cs" />
+    <Compile Include="Models\ChatLogReader.cs" />
+    <Compile Include="Models\FishKnowledgeEntry.cs" />
+    <Compile Include="Models\FishKnowledgeRepository.cs" />
+    <Compile Include="Models\FishIntuition.cs" />
+    <Compile Include="Models\FishIntuitionBuffTracker.cs" />
+    <Compile Include="Models\FishIntuitionTracker.cs" />
+    <Compile Include="Models\PlayerBuff.cs" />
+    <Compile Include="Models\BuffWatcher.cs" />
+    <Compile Include="Models\ColorPickerHelper.cs" />
+    <Compile Include="Models\TtsService.cs" />
+    <Compile Include="Controls\ShadowTextPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -150,9 +157,23 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Wav\中杆.wav" />
-    <Content Include="Wav\轻杆.wav" />
-    <Content Include="Wav\鱼王杆.wav" />
+    <Content Include="Data\FishKnowledge.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Wav\中杆.wav">
+      <Link>中杆.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Wav\轻杆.wav">
+      <Link>轻杆.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Wav\鱼王杆.wav">
+      <Link>鱼王杆.wav</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

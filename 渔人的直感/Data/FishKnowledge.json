@@ -1,0 +1,416 @@
+﻿[
+    {
+        "FishKing":  "欧巴宾海蝎",
+        "Spot":  "阿济兹拉旗舰岛",
+        "Duration":  "105s",
+        "Prerequisites":  "欧洛浦肯:3"
+    },
+    {
+        "FishKing":  "异形雪棘",
+        "Spot":  "艾布拉纳不冻池",
+        "Duration":  "35s",
+        "Prerequisites":  "青磷核:3"
+    },
+    {
+        "FishKing":  "镰甲鱼",
+        "Spot":  "夫妇池",
+        "Duration":  "175s",
+        "Prerequisites":  "怨妇虾:2"
+    },
+    {
+        "FishKing":  "杀手库诺",
+        "Spot":  "歌咏裂谷北部",
+        "Duration":  "1400s",
+        "Prerequisites":  "加诺:1"
+    },
+    {
+        "FishKing":  "自走鱼偶",
+        "Spot":  "观海湾",
+        "Duration":  "350s",
+        "Prerequisites":  "变形鱼:5|变影鱼:1"
+    },
+    {
+        "FishKing":  "莫名熔岩鱼",
+        "Spot":  "光轮祭坛",
+        "Duration":  "180s",
+        "Prerequisites":  "花岗蟹:5|化石骨舌鱼:3"
+    },
+    {
+        "FishKing":  "皇金鱼",
+        "Spot":  "红螳螂瀑布",
+        "Duration":  "600s",
+        "Prerequisites":  "丛林鲶鱼:3"
+    },
+    {
+        "FishKing":  "星鲸",
+        "Spot":  "湖丙β",
+        "Duration":  "600s",
+        "Prerequisites":  "额外维度实体-9318:3|未受生魂:2|法拉伊那:1"
+    },
+    {
+        "FishKing":  "长吻帆蜥鱼",
+        "Spot":  "卡利班深海峡西北",
+        "Duration":  "700s",
+        "Prerequisites":  "奸隐鱼:2"
+    },
+    {
+        "FishKing":  "涅普特龙",
+        "Spot":  "罗塔诺海（船尾）",
+        "Duration":  "350s",
+        "Prerequisites":  "小撒拉奥斯:3"
+    },
+    {
+        "FishKing":  "摩耶鳄",
+        "Spot":  "摩耶幻泉",
+        "Duration":  "180s",
+        "Prerequisites":  "萨维奈鳄:3"
+    },
+    {
+        "FishKing":  "云海蝴蝶螺",
+        "Spot":  "魔窟离岛",
+        "Duration":  "60s",
+        "Prerequisites":  "夕月天女:3|蛉蝎:3"
+    },
+    {
+        "FishKing":  "巨蛇头鳢",
+        "Spot":  "亩鼠水泉",
+        "Duration":  "350s",
+        "Prerequisites":  "骑士虾虎:3"
+    },
+    {
+        "FishKing":  "七彩天主",
+        "Spot":  "七彩沟",
+        "Duration":  "175s",
+        "Prerequisites":  "蓝彩鱼:3|橙彩鱼:3|绿彩鱼:5"
+    },
+    {
+        "FishKing":  "沙里贝涅",
+        "Spot":  "清澈池",
+        "Duration":  "120s",
+        "Prerequisites":  "冰战神:5"
+    },
+    {
+        "FishKing":  "惊喜蛋",
+        "Spot":  "沙河",
+        "Duration":  "360s",
+        "Prerequisites":  "沙卵:10"
+    },
+    {
+        "FishKing":  "铠鱼",
+        "Spot":  "沙利亚克河上流",
+        "Duration":  "160s",
+        "Prerequisites":  "蝼蛄:6"
+    },
+    {
+        "FishKing":  "潜龙",
+        "Spot":  "深壕",
+        "Duration":  "90s",
+        "Prerequisites":  "以太螯虾:3"
+    },
+    {
+        "FishKing":  "醉鱼",
+        "Spot":  "加拉迪翁湾外海",
+        "Duration":  "60s",
+        "Prerequisites":  "加拉迪翁鳀鱼:3"
+    },
+    {
+        "FishKing":  "小利维亚桑",
+        "Spot":  "梅尔托尔海峡南",
+        "Duration":  "60s",
+        "Prerequisites":  "步兵剑:1"
+    },
+    {
+        "FishKing":  "海铠靴",
+        "Spot":  "罗塔诺海海面",
+        "Duration":  "60s",
+        "Prerequisites":  "深红钓鮟鱇:2"
+    },
+    {
+        "FishKing":  "海流星",
+        "Spot":  "梅尔托尔海峡北",
+        "Duration":  "60s",
+        "Prerequisites":  "古老恐鱼:1"
+    },
+    {
+        "FishKing":  "索蒂斯",
+        "Spot":  "加拉迪翁湾外海幻海流",
+        "Duration":  "15s",
+        "Prerequisites":  "天堂之钥:2|海神印:1"
+    },
+    {
+        "FishKing":  "珊瑚蝠鲼",
+        "Spot":  "梅尔托尔海峡南幻海流",
+        "Duration":  "15s",
+        "Prerequisites":  "巨大枪鱼:2"
+    },
+    {
+        "FishKing":  "石骨鱼",
+        "Spot":  "罗塔诺海海面幻海流",
+        "Duration":  "15s",
+        "Prerequisites":  "沉寂者:1|深海鳗:1"
+    },
+    {
+        "FishKing":  "依拉丝莫龙",
+        "Spot":  "梅尔托尔海峡北幻海流",
+        "Duration":  "15s",
+        "Prerequisites":  "守领鳍龙:3"
+    },
+    {
+        "FishKing":  "暗星",
+        "Spot":  "圣人泪",
+        "Duration":  "180s",
+        "Prerequisites":  "绿灯球藻:5"
+    },
+    {
+        "FishKing":  "谢尔达莱结晶",
+        "Spot":  "谢尔达莱群岛近海",
+        "Duration":  "60s",
+        "Prerequisites":  "金属箱:3"
+    },
+    {
+        "FishKing":  "素面",
+        "Spot":  "绯汐海近海",
+        "Duration":  "60s",
+        "Prerequisites":  "落水面具:1"
+    },
+    {
+        "FishKing":  "银杏鱼",
+        "Spot":  "罗斯利特湾近海",
+        "Duration":  "60s",
+        "Prerequisites":  "罗斯利特海带:3"
+    },
+    {
+        "FishKing":  "哈弗古法",
+        "Spot":  "谢尔达莱群岛近海幻海流",
+        "Duration":  "15s",
+        "Prerequisites":  "雾须酒杯:1|喷射蝠鲼:2"
+    },
+    {
+        "FishKing":  "海洋蟾蜍",
+        "Spot":  "绯汐海近海幻海流",
+        "Duration":  "15s",
+        "Prerequisites":  "幸福愿景:3"
+    },
+    {
+        "FishKing":  "盾齿龙",
+        "Spot":  "罗斯利特湾近海幻海流",
+        "Duration":  "45s",
+        "Prerequisites":  "巨魔鱼:1"
+    },
+    {
+        "FishKing":  "科内利亚",
+        "Spot":  "塔赫托特尔湖",
+        "Duration":  "300s",
+        "Prerequisites":  "争斗琵琶鱼:5"
+    },
+    {
+        "FishKing":  "兰代勒翼龙",
+        "Spot":  "惋惜之晶遗迹",
+        "Duration":  "100s",
+        "Prerequisites":  "高天鱼:5"
+    },
+    {
+        "FishKing":  "波太郎",
+        "Spot":  "兀尔德恩惠地",
+        "Duration":  "60s",
+        "Prerequisites":  "大泷太郎:1"
+    },
+    {
+        "FishKing":  "海盗猎人",
+        "Spot":  "西风岬",
+        "Duration":  "120s",
+        "Prerequisites":  "梭子鰆:6"
+    },
+    {
+        "FishKing":  "嘎儿鱼",
+        "Spot":  "熏香海岸",
+        "Duration":  "300s",
+        "Prerequisites":  "矛齿鲸:12"
+    },
+    {
+        "FishKing":  "幽暗鲨",
+        "Spot":  "妖歌海海面",
+        "Duration":  "60s",
+        "Prerequisites":  "诗人的笛子:2"
+    },
+    {
+        "FishKing":  "水引鱼",
+        "Spot":  "黄金港近海",
+        "Duration":  "60s",
+        "Prerequisites":  "鼠鲨:2"
+    },
+    {
+        "FishKing":  "天之虎",
+        "Spot":  "红玉海海面",
+        "Duration":  "60s",
+        "Prerequisites":  "深红巨藻:3"
+    },
+    {
+        "FishKing":  "茂鲨",
+        "Spot":  "无二江下游",
+        "Duration":  "60s",
+        "Prerequisites":  "平铲鲫鱼:3"
+    },
+    {
+        "FishKing":  "塔尼瓦",
+        "Spot":  "妖歌海海面幻海流",
+        "Duration":  "15s",
+        "Prerequisites":  "潜底腔棘鱼:3"
+    },
+    {
+        "FishKing":  "琉璃龙",
+        "Spot":  "黄金港近海幻海流",
+        "Duration":  "45s",
+        "Prerequisites":  "捷疾鬼:2"
+    },
+    {
+        "FishKing":  "狱之蟹",
+        "Spot":  "红玉海海面幻海流",
+        "Duration":  "15s",
+        "Prerequisites":  "芭蕉乌贼:2|巨型真鱿:1"
+    },
+    {
+        "FishKing":  "梅泉宝龟",
+        "Spot":  "无二江下游幻海流",
+        "Duration":  "15s",
+        "Prerequisites":  "玄水虾:1|无二虾虎:2"
+    },
+    {
+        "FishKing":  "胸脊鲨",
+        "Spot":  "盐湖",
+        "Duration":  "350s",
+        "Prerequisites":  "雕塑家:2"
+    },
+    {
+        "FishKing":  "圣法斯里克的石头脑袋",
+        "Spot":  "圣法斯里克天庭",
+        "Duration":  "180s",
+        "Prerequisites":  "丰饶虹鳉:3，装备诺弗兰特远见钓竿"
+    },
+    {
+        "FishKing":  "希望鲤鱼",
+        "Spot":  "原型亚历山德里亚",
+        "Duration":  "300s",
+        "Prerequisites":  "脚尖鲶:3"
+    },
+    {
+        "FishKing":  "小腿鲶",
+        "Spot":  "足尖小坑",
+        "Duration":  "300s",
+        "Prerequisites":  "金色昨日:3|绯红女王:3"
+    },
+    {
+        "FishKing":  "深坑徨灵",
+        "Spot":  "佐戈海峡西侧",
+        "Duration":  "300s",
+        "Prerequisites":  "瀑布徨灵:3"
+    },
+    {
+        "FishKing":  "海鱼小员",
+        "Spot":  "无名岛近海",
+        "Duration":  "60s",
+        "Prerequisites":  "罗塔诺大丽花:3"
+    },
+    {
+        "FishKing":  "世界龟",
+        "Spot":  "无名岛近海幻海流",
+        "Duration":  "20s",
+        "Prerequisites":  "谢尔达莱雄鸡:2"
+    },
+    {
+        "FishKing":  "丰渔绢纱",
+        "Spot":  "萨维奈岛近海",
+        "Duration":  "60s",
+        "Prerequisites":  "红虾蛄:3"
+    },
+    {
+        "FishKing":  "摩那苏婆帝",
+        "Spot":  "萨维奈岛近海幻海流",
+        "Duration":  "15s",
+        "Prerequisites":  "拉札罕龙:2"
+    },
+    {
+        "FishKing":  "第四期重建用的特供雕塑家",
+        "Spot":  "无风云海",
+        "Duration":  "120s",
+        "Prerequisites":  "第四期重建用的海云水母:2"
+    },
+    {
+        "FishKing":  "白金多鳍鱼",
+        "Spot":  "北侧小跳印记",
+        "Duration":  "200s",
+        "Prerequisites":  "月狼鱼:3"
+    },
+    {
+        "FishKing":  "刺突鲛",
+        "Spot":  "贝塔闪亮池",
+        "Duration":  "240s",
+        "Prerequisites":  "林乔利虫:3|月玻璃鱼:1"
+    },
+    {
+        "FishKing":  "深度退火蝾螈",
+        "Spot":  "退火洞",
+        "Duration":  "240s",
+        "Prerequisites":  "探索鬼鱼:2"
+    },
+    {
+        "FishKing":  "鼓大泡泡",
+        "Spot":  "碱石灰河中游南侧",
+        "Duration":  "160s",
+        "Prerequisites":  "假愿贝:2"
+    },
+    {
+        "FishKing":  "胶囊伪鱼",
+        "Spot":  "胶囊池",
+        "Duration":  "420s",
+        "Prerequisites":  "小胶囊:3"
+    },
+    {
+        "FishKing":  "火口魂灵",
+        "Spot":  "熔火涌流",
+        "Duration":  "300s",
+        "Prerequisites":  "熔融类鲨:2"
+    },
+    {
+        "FishKing":  "崎岖翻车鱼",
+        "Spot":  "极界水平线",
+        "Duration":  "300s",
+        "Prerequisites":  "类圆鳍鱼:2"
+    },
+    {
+        "FishKing":  "自形龟",
+        "Spot":  "地下池",
+        "Duration":  "380s",
+        "Prerequisites":  "地洞飞刀:2"
+    },
+    {
+        "FishKing":  "绿雕巨雀鳝",
+        "Spot":  "翠绿圆泉",
+        "Duration":  "300s",
+        "Prerequisites":  "类骨舌鱼:5"
+    },
+    {
+        "FishKing":  "浓绿虹鳉",
+        "Spot":  "盛放喷泉",
+        "Duration":  "95s",
+        "Prerequisites":  "树晶鲀:3"
+    },
+    {
+        "FishKing":  "绿雕巨骨舌鱼",
+        "Spot":  "盛放喷泉",
+        "Duration":  "350s",
+        "Prerequisites":  "盛放脂鲤:1"
+    },
+    {
+        "FishKing":  "紫藤水母",
+        "Spot":  "子叶蓄水池",
+        "Duration":  "180s",
+        "Prerequisites":  "狂欢石竹:3"
+    },
+    {
+        "FishKing":  "绿雕大蛇",
+        "Spot":  "子叶蓄水池",
+        "Duration":  "180s",
+        "Prerequisites":  "绿雕银鲫:2|浮龙:1|紧急水位调整装置:1"
+    }
+]

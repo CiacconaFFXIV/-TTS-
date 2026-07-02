@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='utf-8'?>
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="渔人的直感.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
@@ -34,6 +34,27 @@
     </Setting>
     <Setting Name="CheckDiademWeather" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="TtsEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="TtsTimingOffsetMs" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="FishIntuitionFontSize" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
+    <Setting Name="FishIntuitionFontFamily" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Microsoft YaHei UI</Value>
+    </Setting>
+    <Setting Name="FishIntuitionColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="FishIntuitionShadowColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#000000</Value>
+    </Setting>
+    <Setting Name="FishIntuitionSpacing" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">5</Value>
     </Setting>
   </Settings>
 </SettingsFile>

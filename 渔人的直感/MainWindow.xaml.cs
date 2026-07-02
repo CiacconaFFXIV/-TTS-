@@ -4,7 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using 渔人的直感.Controls;
 using 渔人的直感.Models;
 using Debug = System.Diagnostics.Debug;
 
@@ -23,6 +26,13 @@ namespace 渔人的直感
 
         private readonly Fish Fish = new Fish();
         private readonly Status Status = new Status();
+        private readonly ChatLogReader ChatLog = new ChatLogReader();
+        private readonly FishIntuition FishIntuition = new FishIntuition();
+        private readonly FishKnowledgeRepository FishKnowledge = new FishKnowledgeRepository();
+        private readonly BuffWatcher BuffWatcher = new BuffWatcher();
+        private FishIntuitionTracker _fishIntuitionTracker;
+        private FishIntuitionBuffTracker _fishIntuitionBuffTracker;
+        private ShadowTextPresenter _fishIntuitionText;
 
         public static MainWindow CurrentMainWindow;
         private Window _settingsWindow;
@@ -31,13 +41,32 @@ namespace 渔人的直感
         private bool LastZoneHasSpectralCurrent;
         private bool CurrentZoneHadSpectralCurrent;
         private float CompensatedTime;
+        private int _lastTerritoryType = -1;
+        private string _lastLayoutDisplayText;
 
         public MainWindow()
         {
             InitializeComponent();
+            InitializeFishIntuitionText();
             if (!Initialize())
                 Application.Current.Shutdown();
             LoadConfig();
+        }
+
+        private void InitializeFishIntuitionText()
+        {
+            _fishIntuitionText = new ShadowTextPresenter
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(5, 5, 5, 0),
+                ContextMenu = (ContextMenu)Resources["ContextMenu"]
+            };
+            _fishIntuitionText.SetBinding(ShadowTextPresenter.TextProperty,
+                new Binding(nameof(FishIntuition.DisplayText)) { Source = FishIntuition, Mode = BindingMode.OneWay });
+            _fishIntuitionText.SetBinding(VisibilityProperty,
+                new Binding(nameof(FishIntuition.Visibility)) { Source = FishIntuition, Mode = BindingMode.OneWay });
+            FishIntuitionHost.Children.Add(_fishIntuitionText);
         }
 
         /// <summary>
@@ -69,6 +98,39 @@ namespace 渔人的直感
 
             BiteProgressBar.DataContext = Fish;
             StatusProgressBar.DataContext = Status;
+            ApplyFishIntuitionStyle();
+
+            FishKnowledge.Load();
+            TtsService.Initialize();
+            _fishIntuitionTracker = new FishIntuitionTracker(FishKnowledge, FishIntuition);
+            _fishIntuitionBuffTracker = new FishIntuitionBuffTracker(FishIntuition);
+            Fish.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == "Visibility")
+                    Dispatcher.BeginInvoke(new Action(UpdateFishIntuitionLayout));
+            };
+            Status.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == "Visibility")
+                    Dispatcher.BeginInvoke(new Action(UpdateFishIntuitionLayout));
+            };
+            FishIntuition.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == "Visibility" || e.PropertyName == "LayoutRequired")
+                {
+                    Dispatcher.BeginInvoke(new Action(UpdateFishIntuitionLayout));
+                    return;
+                }
+
+                if (e.PropertyName != "DisplayText" || FishIntuition.Mode == FishIntuitionMode.Countdown)
+                    return;
+
+                Dispatcher.BeginInvoke(new Action(UpdateFishIntuitionLayout));
+            };
+            ChatLog.MessageReceived += entry =>
+            {
+                Application.Current.Dispatcher.Invoke(() => _fishIntuitionTracker.HandleChatMessage(entry));
+            };
 
             GameProcess.EnableRaisingEvents = true;
             GameProcess.Exited += (_, e) =>
@@ -78,6 +140,7 @@ namespace 渔人的直感
 
             Scanner = new SigScanner(GameProcess, GameProcessMainModule);
             Data.Initialize(Scanner);
+            ChatLog.Initialize(Scanner);
             Worker = new BackgroundWorker();
             Worker.DoWork += OnWork;
             Worker.WorkerSupportsCancellation = true;
@@ -92,10 +155,7 @@ namespace 渔人的直感
         /// </summary>
         private void LoadConfig()
         {
-            BiteProgressBar.Height = Properties.Settings.Default.Height;
-            StatusProgressBar.Height = Properties.Settings.Default.Height;
-            Height = Properties.Settings.Default.Height * 2 + 20;
-            Width = Properties.Settings.Default.Width;
+            UpdateFishIntuitionLayout();
 
             if (Properties.Settings.Default.Location.X <= 0 ||
                 Properties.Settings.Default.Location.X >= SystemParameters.FullPrimaryScreenWidth ||
@@ -112,15 +172,139 @@ namespace 渔人的直感
             }
         }
         /// <summary>
+        /// 鱼识文本可撑宽窗口；进度条始终左对齐，避免窗口变宽时整体右移。
+        /// </summary>
+        private void UpdateFishIntuitionLayout()
+        {
+            var barHeight = Properties.Settings.Default.Height;
+            var progressWidth = Properties.Settings.Default.Width;
+            var fontSize = Properties.Settings.Default.FishIntuitionFontSize;
+            var spacing = Properties.Settings.Default.FishIntuitionSpacing;
+
+            BiteProgressBar.Height = barHeight;
+            StatusProgressBar.Height = barHeight;
+            ProgressBarsPanel.Width = progressWidth;
+
+            var barFontSize = Math.Max(9, barHeight * 0.72);
+            BiteProgressBar.FontSize = barFontSize;
+            StatusProgressBar.FontSize = barFontSize;
+
+            _fishIntuitionText.TextFontSize = fontSize;
+            _fishIntuitionText.Margin = new Thickness(5, 5, 5, spacing);
+
+            var showIntuition = FishIntuition.Visibility == Visibility.Visible &&
+                                !string.IsNullOrEmpty(FishIntuition.DisplayText);
+            var windowWidth = progressWidth;
+
+            if (showIntuition)
+            {
+                var displayText = FishIntuition.DisplayText;
+
+                if (FishIntuition.Mode == FishIntuitionMode.Countdown)
+                {
+                    windowWidth = progressWidth;
+                    _fishIntuitionText.Width = progressWidth;
+                }
+                else if (!string.Equals(displayText, _lastLayoutDisplayText, StringComparison.Ordinal))
+                {
+                    _fishIntuitionText.Width = double.NaN;
+                    _fishIntuitionText.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                    var textWidth = Math.Ceiling(_fishIntuitionText.DesiredSize.Width) + 10;
+                    windowWidth = Math.Max(progressWidth, textWidth);
+                    _fishIntuitionText.Width = windowWidth;
+                    _lastLayoutDisplayText = displayText;
+                }
+                else
+                {
+                    windowWidth = Math.Max(progressWidth, Width > 0 ? Width : progressWidth);
+                    _fishIntuitionText.Width = windowWidth;
+                }
+            }
+            else
+            {
+                _fishIntuitionText.Width = double.NaN;
+                _lastLayoutDisplayText = null;
+            }
+
+            Width = windowWidth;
+
+            var height = 0.0;
+            if (showIntuition)
+            {
+                _fishIntuitionText.Measure(new Size(windowWidth, double.PositiveInfinity));
+                height += _fishIntuitionText.DesiredSize.Height;
+                height += _fishIntuitionText.Margin.Top + _fishIntuitionText.Margin.Bottom;
+            }
+
+            const double barMarginVertical = 10.0;
+            if (Fish.Visibility == Visibility.Visible)
+                height += barHeight + barMarginVertical;
+            if (Status.Visibility == Visibility.Visible)
+                height += barHeight + barMarginVertical;
+
+            if (height <= 0)
+                height = barHeight + barMarginVertical;
+
+            Height = height;
+        }
+
+        private void ApplyFishIntuitionStyle()
+        {
+            var settings = Properties.Settings.Default;
+            _fishIntuitionText.TextFontSize = settings.FishIntuitionFontSize;
+
+            try
+            {
+                _fishIntuitionText.TextFontFamily = new System.Windows.Media.FontFamily(settings.FishIntuitionFontFamily);
+            }
+            catch
+            {
+                _fishIntuitionText.TextFontFamily = new System.Windows.Media.FontFamily("Microsoft YaHei UI");
+            }
+
+            _fishIntuitionText.TextForeground = ColorPickerHelper.ToBrush(settings.FishIntuitionColor);
+
+            try
+            {
+                _fishIntuitionText.ShadowColor =
+                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(settings.FishIntuitionShadowColor);
+            }
+            catch
+            {
+                _fishIntuitionText.ShadowColor = System.Windows.Media.Colors.Black;
+            }
+        }
+
+        /// <summary>
         ///     设置窗体的隐藏与鼠标穿透属性
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            WindowStyleHelper.ExStyle |= 0x00000080; //ExtendedWindowStyles.WS_EX_TOOLWINDOW = 0x00000080
+            ApplyClickThrough();
+        }
+
+        /// <summary>
+        /// 应用已保存的设置（无需重启）。
+        /// </summary>
+        public void ApplySettings()
+        {
+            ApplyFishIntuitionStyle();
+            UpdateFishIntuitionLayout();
+            ApplyClickThrough();
+            Fish.RefreshAppearanceFromSettings();
+            Status.RefreshAppearanceFromSettings();
+            Fish.Update();
+        }
+
+        private void ApplyClickThrough()
+        {
+            WindowStyleHelper.ExStyle |= 0x00000080; // WS_EX_TOOLWINDOW
             if (Properties.Settings.Default.ClickThrough)
-                WindowStyleHelper.ExStyle |= 0x00000020; //ExtendedWindowStyles.WS_EX_TRANSPARENT  = 0x00000020
+                WindowStyleHelper.ExStyle |= 0x00000020; // WS_EX_TRANSPARENT
+            else
+                WindowStyleHelper.ExStyle &= ~0x00000020;
         }
 
         /// <summary>
@@ -149,22 +333,29 @@ namespace 渔人的直感
                     if (localPlayer == IntPtr.Zero)
                     {
                         Reset();
-                        Status.End();
+                        RunOnUiThread(() => Status.End());
                         Fish.Reset();
+                        BuffWatcher.Reset();
+                        _fishIntuitionBuffTracker.Reset();
                         //挂机会导致cpu飙高
                         Thread.Sleep(50);
                         continue;
                     }
 
                     if (!Data.IsGathering) Fish.Reset();
+                    TerritoryChangeCheck();
                     OceanFishingZoneCheck();
                     WeatherCheck(Data.WeatherPtr);
-                    var buffTablePtr = localPlayer + Data.UiStatusEffects;
-                    BuffCheck(buffTablePtr);
-
+                    var statusArrayPtr = Data.GetPlayerStatusArrayPtr(localPlayer);
+                    BuffCheck(statusArrayPtr);
+                    BuffWatcher.Poll(Scanner, statusArrayPtr);
+                    _fishIntuitionBuffTracker.Poll(Scanner, statusArrayPtr,
+                        action => Application.Current.Dispatcher.Invoke(action));
 
                     if (Fish.State == FishingState.Casting) Fish.Update();
-                    if (Status.IsActive) Status.Update();
+                    if (Status.IsActive)
+                        RunOnUiThread(() => Status.Update());
+                    ChatLog.Poll();
                 }
                 catch (Exception)
                 {
@@ -227,41 +418,36 @@ namespace 渔人的直感
                     break;
             }*/
         }
-        private void BuffCheck(IntPtr buffTablePtr)
+        private void RunOnUiThread(Action action)
+        {
+            if (action == null)
+                return;
+
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null)
+                return;
+
+            if (dispatcher.CheckAccess())
+                action();
+            else
+                dispatcher.Invoke(action);
+        }
+
+        private void BuffCheck(IntPtr statusArrayPtr)
         {
             if (!Status.IsActive)
             {
-                for (var i = 0; i < 30; i++)
-                    if (Scanner.ReadInt16(buffTablePtr + i * 12) == Data.FishEyesBuffId)
-                    {
-                        Status.Start(Scanner.ReadFloat(buffTablePtr + i * 12 + 4));
-                        /*Buff buff = new Buff
-                        {
-                            ID = Scanner.ReadInt16(BuffTablePtr + i * 12),
-                            Stacks = Scanner.ReadInt16(BuffTablePtr + i * 12 + 2),
-                            Duration = Scanner.ReadFloat(BuffTablePtr + i * 12 + 4),
-                            Owner = Scanner.ReadInt32(BuffTablePtr + i * 12 + 8)
-                        };*/
-                        break;
-                    }
+                if (BuffWatcher.TryGetBuffRemaining(Scanner, statusArrayPtr, (short)Data.FishEyesBuffId, out var remaining))
+                    RunOnUiThread(() => Status.Start(remaining));
 
                 return;
             }
 
-            if (Status.Type != Status.StatusType.FishEyes) return;
-            
-            var fishEyeIsActive = false;
-            for (var i = 0; i < 30; i++)
-            {
-                if (Scanner.ReadInt16(buffTablePtr + i * 12) != Data.FishEyesBuffId)
-                    continue;
-                fishEyeIsActive = true;
-                break;
-            }
+            if (Status.Type != Status.StatusType.FishEyes)
+                return;
 
-            if (!fishEyeIsActive)
-                Status.End();
-            
+            if (!BuffWatcher.HasBuff(Scanner, statusArrayPtr, (short)Data.FishEyesBuffId))
+                RunOnUiThread(() => Status.End());
         }
 
         private void WeatherCheck(IntPtr weatherPtr)
@@ -317,15 +503,33 @@ namespace 渔人的直感
                         }
                     }
 
-                    Status.Start(weather, duration);
+                    RunOnUiThread(() => Status.Start(weather, duration));
                     break;
                 }
             }
             else if (Status.Type == Status.StatusType.Weather)
             {
                 if (Data.SpecialWeathers.All(x => currentWeather != x.Id))
-                    Status.End();
+                    RunOnUiThread(() => Status.End());
             }
+        }
+
+        private void TerritoryChangeCheck()
+        {
+            var territory = Data.TerritoryType;
+            if (territory == 0)
+                return;
+
+            if (_lastTerritoryType >= 0 && territory != _lastTerritoryType)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _fishIntuitionTracker.ClearOnMapChange();
+                    _fishIntuitionBuffTracker.Reset();
+                });
+            }
+
+            _lastTerritoryType = territory;
         }
 
         private void OceanFishingZoneCheck()
@@ -345,6 +549,15 @@ namespace 渔人的直感
                 var currentZone = Data.OceanFishingCurrentZone;
                 if (LastOceanFishingZone == currentZone)
                     return;
+
+                if (LastOceanFishingZone != byte.MaxValue && currentZone != 0)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        _fishIntuitionTracker.ClearOnMapChange();
+                        _fishIntuitionBuffTracker.Reset();
+                    });
+                }
 
                 //换海域了, 刚进来的时候海域是0,所以直接设成false
                 Debug.WriteLine($"[{DateTime.Now}] Moving to next zone / {LastOceanFishingZone:X}:{currentZone:X} / {Data.OceanFishingRemainingTime}");

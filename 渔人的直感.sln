@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30011.22
+# Visual Studio Version 18
+VisualStudioVersion = 18.8.11918.235 insiders
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "渔人的直感", "渔人的直感\渔人的直感.csproj", "{13648261-7941-4A4E-9682-8959A9A9AFE4}"
 EndProject

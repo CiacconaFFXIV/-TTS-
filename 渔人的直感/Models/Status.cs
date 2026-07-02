@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 
 namespace 渔人的直感.Models
@@ -41,6 +41,14 @@ namespace 渔人的直感.Models
             IsActive = false;
             _duration = 0f;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Visibility"));
+        }
+
+        public void RefreshAppearanceFromSettings()
+        {
+            if (!IsActive)
+                return;
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Color"));
         }
 
         public void Update()

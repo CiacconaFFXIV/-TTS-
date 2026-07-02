@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Media;
@@ -61,12 +61,15 @@ namespace 渔人的直感.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Color"));
 			Update();
 
-			if (File.Exists(soundPlayer.SoundLocation))
+			var soundPath = soundPlayer.SoundLocation;
+			TtsService.PlayBite(tug, () =>
 			{
-				//m_mediaPlayer.Play();
-				soundPlayer.LoadAsync();
-				soundPlayer.Play();
-			}
+				if (!File.Exists(soundPath))
+					return;
+				var player = new SoundPlayer(soundPath);
+				player.LoadAsync();
+				player.Play();
+			});
 		}
 		public void Reset()
 		{
@@ -74,6 +77,35 @@ namespace 渔人的直感.Models
 			State = FishingState.None;
 			Update();
 		} 
+
+		public void RefreshAppearanceFromSettings()
+		{
+			if (State == FishingState.None)
+				return;
+
+			switch (State)
+			{
+				case FishingState.Casting:
+					Color = Properties.Settings.Default.TimerColor;
+					break;
+				case FishingState.Holding:
+					switch (_tug)
+					{
+						case TugType.Light:
+							Color = Properties.Settings.Default.LTugColor;
+							break;
+						case TugType.Medium:
+							Color = Properties.Settings.Default.MTugColor;
+							break;
+						case TugType.Heavy:
+							Color = Properties.Settings.Default.HTugColor;
+							break;
+					}
+					break;
+			}
+
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Color"));
+		}
 
 		public void Update()
 		{
