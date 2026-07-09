@@ -5,9 +5,6 @@ using System.Text;
 
 namespace 渔人的直感.Models
 {
-    /// <summary>
-    /// 监听本地玩家 Buff 表，变化时输出 Debug 日志。
-    /// </summary>
     public sealed class BuffWatcher
     {
         public const int SlotCount = Data.StatusSlotCount;

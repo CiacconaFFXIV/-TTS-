@@ -67,10 +67,6 @@ namespace 渔人的直感.Models
 
         public static bool IsInOceanFishing => GetInstanceContentDirector() != IntPtr.Zero;
 
-        /// <summary>
-        /// 本地玩家 Character 上嵌入的 StatusManager 偏移（特征码 lea rax,[rcx+disp]; ret）。
-        /// Status 数组在 StatusManager+0x8，每槽 0x10 字节，共 60 槽。
-        /// </summary>
         public static int UiStatusEffects;
 
         public const int StatusArrayOffset = 0x8;

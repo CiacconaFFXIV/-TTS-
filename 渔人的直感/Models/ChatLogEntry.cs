@@ -5,9 +5,6 @@ using System.Text.RegularExpressions;
 
 namespace 渔人的直感.Models
 {
-    /// <summary>
-    /// 从游戏内存解析出的单条聊天日志。
-    /// </summary>
     public sealed class ChatLogEntry
     {
         private static readonly Regex SpecialPurposeUnicodeRegex =
@@ -23,10 +20,6 @@ namespace 渔人的直感.Models
         public string Code { get; set; }
         public string Message { get; set; }
 
-        /// <summary>
-        /// 解析 RaptureLogModule 中 LogMessageData 的原始条目。
-        /// 格式：4 字节时间戳 + 2 字节频道码 + 2 字节保留 + SeString 正文。
-        /// </summary>
         public static ChatLogEntry Parse(byte[] raw)
         {
             if (raw == null || raw.Length < 8)
@@ -54,9 +47,6 @@ namespace 渔人的直感.Models
             return entry;
         }
 
-        /// <summary>
-        /// 剥离 FF14 SeString 控制字节后按 UTF-8 解码。
-        /// </summary>
         private static string CleanMessage(byte[] bytes)
         {
             var cleaned = new List<byte>(bytes.Length);

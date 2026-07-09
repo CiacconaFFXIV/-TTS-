@@ -3,10 +3,6 @@ using System.Diagnostics;
 
 namespace 渔人的直感.Models
 {
-    /// <summary>
-    /// 聊天日志模块地址解析。
-    /// 偏移参考 FFXIVClientStructs：Framework.UIModule @ +0x2B68，UIModule.RaptureLogModule @ +0x1AC0。
-    /// </summary>
     internal static class ChatLogData
     {
         private const int FrameworkUiModuleOffset = 0x2B68;

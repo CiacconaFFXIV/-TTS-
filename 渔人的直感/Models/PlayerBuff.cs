@@ -1,8 +1,5 @@
 namespace 渔人的直感.Models
 {
-    /// <summary>
-    /// 玩家 UI Buff 槽位数据（与内存布局一致）。
-    /// </summary>
     public sealed class PlayerBuff
     {
         public int Slot { get; set; }

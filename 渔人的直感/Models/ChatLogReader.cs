@@ -4,11 +4,6 @@ using System.Diagnostics;
 
 namespace 渔人的直感.Models
 {
-    /// <summary>
-    /// 从 RaptureLogModule 读取聊天框内容，并过滤「自己的采集信息」频道。
-    /// 频道码 LogInfo：低 7 位 = LogKind，11-14 位 = SourceKind（1 = 本地玩家）。
-    /// 083B = 采集（自己），0843 = 收藏品/钓鱼采集（自己）。
-    /// </summary>
     public sealed class ChatLogReader
     {
         private const int LogMessageIndexOffset = 0x48;
@@ -124,9 +119,6 @@ namespace 渔人的直感.Models
             }
         }
 
-        /// <summary>
-        /// 判断是否为「自己的采集信息」：SourceKind = LocalPlayer，LogKind = 采集/钓鱼。
-        /// </summary>
         private static bool IsSelfGatheringMessage(byte[] raw)
         {
             var logInfo = (ushort)(raw[4] | (raw[5] << 8));

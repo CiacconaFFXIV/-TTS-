@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -49,7 +49,10 @@ namespace 渔人的直感
             InitializeComponent();
             InitializeFishIntuitionText();
             if (!Initialize())
+            {
+                DebugLog.Write("Initialize failed, shutting down.");
                 Application.Current.Shutdown();
+            }
             LoadConfig();
         }
 
@@ -129,24 +132,37 @@ namespace 渔人的直感
             };
             ChatLog.MessageReceived += entry =>
             {
-                Application.Current.Dispatcher.Invoke(() => _fishIntuitionTracker.HandleChatMessage(entry));
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    try
+                    {
+                        _fishIntuitionTracker.HandleChatMessage(entry);
+                    }
+                    catch (Exception ex)
+                    {
+                        DebugLog.Exception(ex, "HandleChatMessage");
+                    }
+                });
             };
 
             GameProcess.EnableRaisingEvents = true;
             GameProcess.Exited += (_, e) =>
             {
+                DebugLog.Write("FFXIV process exited.");
                 Application.Current.Dispatcher.Invoke(() => { Application.Current.Shutdown(); });
             };
 
             Scanner = new SigScanner(GameProcess, GameProcessMainModule);
             Data.Initialize(Scanner);
             ChatLog.Initialize(Scanner);
+            DebugLog.Write($"Initialized. FFXIV PID={GameProcess.Id}, ChatLog={ChatLog.IsInitialized}");
             Worker = new BackgroundWorker();
             Worker.DoWork += OnWork;
             Worker.WorkerSupportsCancellation = true;
             Worker.RunWorkerAsync();
 
             CurrentMainWindow = this;
+            Closing += (_, e) => DebugLog.Write("MainWindow closing.");
             Closing += SaveLocation;
             return true;
         }
@@ -171,9 +187,6 @@ namespace 渔人的直感
                 WindowStartupLocation = WindowStartupLocation.Manual;
             }
         }
-        /// <summary>
-        /// 鱼识文本可撑宽窗口；进度条始终左对齐，避免窗口变宽时整体右移。
-        /// </summary>
         private void UpdateFishIntuitionLayout()
         {
             var barHeight = Properties.Settings.Default.Height;
@@ -285,9 +298,6 @@ namespace 渔人的直感
             ApplyClickThrough();
         }
 
-        /// <summary>
-        /// 应用已保存的设置（无需重启）。
-        /// </summary>
         public void ApplySettings()
         {
             ApplyFishIntuitionStyle();
@@ -357,9 +367,9 @@ namespace 渔人的直感
                         RunOnUiThread(() => Status.Update());
                     ChatLog.Poll();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // ignored
+                    DebugLog.Exception(ex, "OnWork loop");
                 }
 
                 Thread.Sleep(50);
@@ -428,9 +438,37 @@ namespace 渔人的直感
                 return;
 
             if (dispatcher.CheckAccess())
-                action();
+            {
+                try
+                {
+                    action();
+                }
+                catch (Exception ex)
+                {
+                    DebugLog.Exception(ex, "RunOnUiThread");
+                }
+            }
             else
-                dispatcher.Invoke(action);
+            {
+                try
+                {
+                    dispatcher.Invoke(() =>
+                    {
+                        try
+                        {
+                            action();
+                        }
+                        catch (Exception ex)
+                        {
+                            DebugLog.Exception(ex, "RunOnUiThread (invoked)");
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    DebugLog.Exception(ex, "RunOnUiThread (dispatch failed)");
+                }
+            }
         }
 
         private void BuffCheck(IntPtr statusArrayPtr)
@@ -565,11 +603,9 @@ namespace 渔人的直感
                 CurrentZoneHadSpectralCurrent = false;
                 LastOceanFishingZone = currentZone;
             }
-            catch
+            catch (Exception ex)
             {
-                // 结算的时候是invalid的
-                // 应该没必要,反正检查territory id了
-                // Reset();
+                DebugLog.Exception(ex, "OceanFishingZoneCheck");
             }
         }
 

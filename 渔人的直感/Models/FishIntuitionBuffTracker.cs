@@ -2,9 +2,6 @@ using System;
 
 namespace 渔人的直感.Models
 {
-    /// <summary>
-    /// 根据鱼识 Buff（568）的出现、消失与剩余时间同步鱼识倒计时。
-    /// </summary>
     public sealed class FishIntuitionBuffTracker
     {
         private const float RefreshThresholdSeconds = 1.5f;

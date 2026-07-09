@@ -13,9 +13,6 @@ namespace 渔人的直感.Models
         Countdown
     }
 
-    /// <summary>
-    /// 鱼识 UI：前置计数 / 鱼识倒计时 / 隐藏保留 / 清空。
-    /// </summary>
     public sealed class FishIntuition : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

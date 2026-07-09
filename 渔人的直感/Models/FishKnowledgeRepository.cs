@@ -46,13 +46,21 @@ namespace 渔人的直感.Models
                     return entry;
             }
 
+            FishKnowledgeEntry bestPrefixMatch = null;
             foreach (var entry in _entries)
             {
-                if (entry.Spot != null && (entry.Spot.Contains(spotName) || spotName.Contains(entry.Spot)))
-                    return entry;
+                if (string.IsNullOrEmpty(entry.Spot))
+                    continue;
+                if (spotName.Length <= entry.Spot.Length)
+                    continue;
+                if (!spotName.StartsWith(entry.Spot, StringComparison.Ordinal))
+                    continue;
+
+                if (bestPrefixMatch == null || entry.Spot.Length > bestPrefixMatch.Spot.Length)
+                    bestPrefixMatch = entry;
             }
 
-            return null;
+            return bestPrefixMatch;
         }
     }
 }

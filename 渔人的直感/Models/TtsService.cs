@@ -7,9 +7,6 @@ using System.Threading.Tasks;
 
 namespace 渔人的直感.Models
 {
-    /// <summary>
-    /// Windows 自带 TTS，咬钩时与杆型音频协调播放。
-    /// </summary>
     public static class TtsService
     {
         private static SpeechSynthesizer _synthesizer;
